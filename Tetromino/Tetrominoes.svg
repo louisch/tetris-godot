@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="Tetromino_Tiling_5x8"
+   width="90"
+   height="68"
+   sodipodi:version="0.32"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
+   sodipodi:docname="Tetrominoes.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <metadata
+     id="metadata30">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs28">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 92.999557 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="90 : 92.999557 : 1"
+       inkscape:persp3d-origin="45 : 82.999557 : 1"
+       id="perspective32" />
+  </defs>
+  <sodipodi:namedview
+     inkscape:window-height="1377"
+     inkscape:window-width="2560"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     guidetolerance="10.0"
+     gridtolerance="10.0"
+     objecttolerance="10.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     showgrid="true"
+     inkscape:zoom="8.5481353"
+     inkscape:cx="19.346951"
+     inkscape:cy="53.243983"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:current-layer="Tetromino_Tiling_5x8"
+     inkscape:document-rotation="0"
+     fit-margin-left="1"
+     fit-margin-top="1"
+     fit-margin-right="1"
+     fit-margin-bottom="1"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid908"
+       originx="0.00086"
+       originy="0.0008814" />
+  </sodipodi:namedview>
+  <g
+     id="g3244"
+     transform="translate(-3.49979,-2.5)">
+    <path
+       d="M 5,4 H 45 V 14 H 5 Z"
+       id="path11"
+       style="fill:#44ffff;fill-opacity:1;stroke:#000000;stroke-width:1" />
+    <path
+       sodipodi:nodetypes="ccccc"
+       style="fill:none;stroke:#000000;stroke-width:0.3"
+       id="path3187"
+       d="M 15.000443,4.0004407 V 14 H 25.00043 L 25.00022,4.0004407 15,3.9999997" />
+    <path
+       sodipodi:nodetypes="ccccc"
+       style="fill:none;stroke:#000000;stroke-width:0.3"
+       id="path3191"
+       d="M 35.000443,4.0004407 V 14 H 45.00043 L 45.00022,4.0004407 35,3.9999997" />
+  </g>
+  <g
+     id="g3197"
+     transform="translate(-63.5,9.5004407)">
+    <path
+       d="M 65,3.9999994 H 85 V 24 H 65 Z"
+       id="path15"
+       style="fill:#ffff44;fill-opacity:1;stroke:#000000;stroke-width:1" />
+    <path
+       sodipodi:nodetypes="ccccc"
+       style="fill:none;stroke:#000000;stroke-width:0.3"
+       id="path3193"
+       d="M 65.00044,4.0004408 V 14 h 9.99999 L 75.00022,4.0004408 65,3.9999998" />
+    <path
+       sodipodi:nodetypes="ccccc"
+       style="fill:none;stroke:#000000;stroke-width:0.3"
+       id="path3195"
+       d="M 75.000443,14.000441 V 24 H 85.00043 L 85.00022,14.000441 75,14" />
+  </g>
+  <g
+     id="g3230"
+     transform="translate(-3.49979,10.5)">
+    <path
+       d="m 5,25 h 10 v 20 h 9.999999 V 55 H 5 Z"
+       id="path7"
+       style="fill:#ff8800;fill-opacity:1;stroke:#000000;stroke-width:1" />
+    <path
+       sodipodi:nodetypes="ccccc"
+       style="fill:none;stroke:#000000;stroke-width:0.3"
+       id="path3222"
+       d="M 5.000443,25.000441 V 35 H 15.00043 L 15.00022,25.000441 5,25" />
+    <path
+       sodipodi:nodetypes="ccccc"
+       style="fill:none;stroke:#000000;stroke-width:0.3"
+       id="path3224"
+       d="M 5.000443,45.000441 V 55 H 15.00043 L 15.00022,45.000441 5,45" />
+  </g>
+  <g
+     id="g3239"
+     transform="translate(15.50043,10.500441)">
+    <path
+       d="M 30,25 H 40 V 35 H 50 V 55 H 40 V 45 H 30 Z"
+       id="path9"
+       style="fill:#44ff44;fill-opacity:1;stroke:#000000;stroke-width:1" />
+    <path
+       sodipodi:nodetypes="ccccc"
+       style="fill:none;stroke:#000000;stroke-width:0.3"
+       id="path3226"
+       d="M 30.000443,35.000441 V 45 H 40.00043 L 40.00022,35.000441 30,35" />
+    <path
+       sodipodi:nodetypes="ccccc"
+       style="fill:none;stroke:#000000;stroke-width:0.3"
+       id="path3228"
+       d="M 40.000443,45.000441 V 55 H 50.00043 L 50.00022,45.000441 40,45" />
+  </g>
+  <g
+     id="g3235"
+     transform="translate(-11.500013,-33.499559)">
+    <path
+       d="M 55,35 H 85 V 45 H 75 V 55 H 65 V 45 H 55 Z"
+       id="path13"
+       style="fill:#ff44ff;fill-opacity:1;stroke:#000000;stroke-width:1" />
+    <path
+       sodipodi:nodetypes="ccccc"
+       style="fill:none;stroke:#000000;stroke-width:0.3"
+       id="path3"
+       d="M 65.000443,35.000441 V 45 H 75.00043 L 75.00022,35.000441 65,35" />
+  </g>
+  <g
+     id="g906"
+     transform="translate(18.73462,-24.829343)">
+    <g
+       id="g64"
+       transform="matrix(-1,0,0,1,29.76603,35.329343)">
+      <path
+         d="m 5,25 h 10 v 20 h 9.999999 V 55 H 5 Z"
+         id="path58"
+         style="fill:#0008ff;fill-opacity:1;stroke:#000000;stroke-width:1" />
+      <path
+         sodipodi:nodetypes="ccccc"
+         style="fill:none;stroke:#000000;stroke-width:0.3"
+         id="path60"
+         d="M 5.000443,25.000441 V 35 H 15.00043 L 15.00022,25.000441 5,25" />
+      <path
+         sodipodi:nodetypes="ccccc"
+         style="fill:none;stroke:#000000;stroke-width:0.3"
+         id="path62"
+         d="M 5.000443,45.000441 V 55 H 15.00043 L 15.00022,45.000441 5,45" />
+    </g>
+  </g>
+  <g
+     id="g895"
+     transform="matrix(-1,0,0,1,117.1497,10.850954)">
+    <g
+       id="g900"
+       transform="translate(-0.35095373,-0.35095373)">
+      <path
+         d="M 30,25 H 40 V 35 H 50 V 55 H 40 V 45 H 30 Z"
+         id="path889"
+         style="fill:#ff4444;fill-opacity:1;stroke:#000000;stroke-width:1" />
+      <path
+         sodipodi:nodetypes="ccccc"
+         style="fill:none;stroke:#000000;stroke-width:0.3"
+         id="path891"
+         d="M 30.000443,35.000441 V 45 H 40.00043 L 40.00022,35.000441 30,35" />
+      <path
+         sodipodi:nodetypes="ccccc"
+         style="fill:none;stroke:#000000;stroke-width:0.3"
+         id="path893"
+         d="M 40.000443,45.000441 V 55 H 50.00043 L 50.00022,45.000441 40,45" />
+    </g>
+  </g>
+</svg>
