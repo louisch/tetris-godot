@@ -21,6 +21,7 @@ const COLORS = {
 	"S": Color.green,
 	"Z": Color.red,
 }
+const ALL_TETROMINOES = ["I", "J", "L", "O", "T", "S", "Z"]
 var cell_position: Vector2 setget set_cell_position
 var rotated_times: int = 0
 
@@ -30,8 +31,7 @@ func initialize(new_cell_size: int, cell_scene_: PackedScene):
 	cell_size = new_cell_size
 
 	# Set block type randomly
-	var all_tetrominoes = TetrominoUtils.all_tetrominoes()
-	var new_block_type = all_tetrominoes[int(randf() * all_tetrominoes.size())]
+	var new_block_type = ALL_TETROMINOES[int(randf() * ALL_TETROMINOES.size())]
 	set_block_type(new_block_type)
 
 func set_block_type(new_block_type: String):

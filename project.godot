@@ -23,17 +23,11 @@ _global_script_classes=[ {
 "class": "Tetromino",
 "language": "GDScript",
 "path": "res://Tetromino/Tetromino.gd"
-}, {
-"base": "Node",
-"class": "TetrominoUtils",
-"language": "GDScript",
-"path": "res://Tetromino/TetrominoUtils.gd"
 } ]
 _global_script_class_icons={
 "Cell": "",
 "GitAPI": "",
-"Tetromino": "",
-"TetrominoUtils": ""
+"Tetromino": ""
 }
 
 [application]
