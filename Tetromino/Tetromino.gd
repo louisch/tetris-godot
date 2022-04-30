@@ -91,10 +91,10 @@ func set_cell_position_at_top(cell_position_x):
 		if cell.cell_position.y < highest_cell.cell_position.y:
 			highest_cell = cell
 	var cell_position_y = -highest_cell.cell_position.y
-	cell_position = Vector2(
+	set_cell_position(Vector2(
 		cell_position_x,
 		cell_position_y
-	)
+	))
 
 func rotate90():
 	if state == State.FALLING:
