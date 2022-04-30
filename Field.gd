@@ -2,6 +2,7 @@ extends Node2D
 
 
 export(PackedScene) var tetromino_scene: PackedScene
+export(PackedScene) var cell_scene: PackedScene
 export var field_width: int = 10
 export var field_height: int = 20
 var current_tetromino: Tetromino
@@ -22,10 +23,7 @@ func _process(_delta: float):
 
 func spawn_tetromino():
 	current_tetromino = tetromino_scene.instance()
-	current_tetromino.initialize(cell_size)
+	current_tetromino.initialize(cell_size, cell_scene)
 	add_child(current_tetromino)
-	var position = Vector2(
-		int(randf() * field_width) * cell_size,
-		0
-	)
-	current_tetromino.translate(position)
+	var cell_position_x = int(randf() * field_width)
+	current_tetromino.set_cell_position_at_top(cell_position_x)

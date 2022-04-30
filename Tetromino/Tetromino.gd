@@ -1,4 +1,4 @@
-extends Area2D
+extends Node2D
 
 class_name Tetromino
 
@@ -7,9 +7,9 @@ enum State {
 }
 
 # Declare member variables here.
-var cell_scene: PackedScene = preload("res://Tetromino/Cell.tscn")
+export var cell_scene: PackedScene
 var state = State.FALLING
-var block_type: String
+export var block_type: String setget set_block_type
 var cell_size: int
 var cells: Array
 const COLORS = {
@@ -21,16 +21,25 @@ const COLORS = {
 	"S": Color.green,
 	"Z": Color.red,
 }
+var cell_position: Vector2 setget set_cell_position
+var rotated_times: int = 0
 
-func initialize(new_cell_size: int):
+func initialize(new_cell_size: int, cell_scene_: PackedScene):
+	cell_scene = cell_scene_
 	# Set Cell Size
 	cell_size = new_cell_size
 
 	# Set block type randomly
 	var all_tetrominoes = TetrominoUtils.all_tetrominoes()
-	block_type = all_tetrominoes[int(randf() * all_tetrominoes.size())]
+	var new_block_type = all_tetrominoes[int(randf() * all_tetrominoes.size())]
+	set_block_type(new_block_type)
 
+func set_block_type(new_block_type: String):
+	block_type = new_block_type
+	
 	# Initialize cells
+	for cell in cells:
+		cell.queue_free()
 	cells = []
 	for _i in range(4):
 		var new_cell: Cell = cell_scene.instance()
@@ -39,50 +48,69 @@ func initialize(new_cell_size: int):
 		cells.push_back(new_cell)
 	match block_type:
 		"I":
-			cells[1].attach(cells[0], "LEFT")
-			cells[1].attach(cells[2], "RIGHT")
-			cells[2].attach(cells[3], "RIGHT")
+			cells[0].add_adjacent(cells[1], Cell.Direction.LEFT)
+			cells[0].add_adjacent(cells[2], Cell.Direction.RIGHT)
+			cells[2].add_adjacent(cells[3], Cell.Direction.RIGHT)
 		"J":
-			cells[1].attach(cells[0], "UP")
-			cells[1].attach(cells[2], "DOWN")
-			cells[2].attach(cells[3], "LEFT")
+			cells[0].add_adjacent(cells[1], Cell.Direction.UP)
+			cells[0].add_adjacent(cells[2], Cell.Direction.DOWN)
+			cells[2].add_adjacent(cells[3], Cell.Direction.LEFT)
 		"L":
-			cells[1].attach(cells[0], "UP")
-			cells[1].attach(cells[2], "DOWN")
-			cells[2].attach(cells[3], "RIGHT")
+			cells[0].add_adjacent(cells[1], Cell.Direction.UP)
+			cells[0].add_adjacent(cells[2], Cell.Direction.DOWN)
+			cells[2].add_adjacent(cells[3], Cell.Direction.RIGHT)
 		"O":
-			cells[0].attach(cells[1], "DOWN")
-			cells[1].attach(cells[2], "RIGHT")
-			cells[2].attach(cells[3], "UP")
-			cells[3].attach(cells[0], "LEFT")
+			cells[0].add_adjacent(cells[1], Cell.Direction.DOWN)
+			cells[1].add_adjacent(cells[2], Cell.Direction.RIGHT)
+			cells[2].add_adjacent(cells[3], Cell.Direction.UP)
+			cells[0].borders[Cell.Direction.RIGHT] = Cell.Border.THIN
+			cells[3].borders[Cell.Direction.LEFT] = Cell.Border.THIN
 		"T":
-			cells[1].attach(cells[0], "LEFT")
-			cells[1].attach(cells[2], "UP")
-			cells[1].attach(cells[3], "RIGHT")
+			cells[0].add_adjacent(cells[1], Cell.Direction.LEFT)
+			cells[0].add_adjacent(cells[2], Cell.Direction.UP)
+			cells[0].add_adjacent(cells[3], Cell.Direction.RIGHT)
 		"S":
-			cells[1].attach(cells[0], "LEFT")
-			cells[1].attach(cells[2], "DOWN")
-			cells[2].attach(cells[3], "RIGHT")
+			cells[0].add_adjacent(cells[1], Cell.Direction.LEFT)
+			cells[0].add_adjacent(cells[2], Cell.Direction.DOWN)
+			cells[2].add_adjacent(cells[3], Cell.Direction.RIGHT)
 		"Z":
-			cells[1].attach(cells[0], "LEFT")
-			cells[1].attach(cells[2], "UP")
-			cells[2].attach(cells[3], "RIGHT")
+			cells[0].add_adjacent(cells[1], Cell.Direction.LEFT)
+			cells[0].add_adjacent(cells[2], Cell.Direction.UP)
+			cells[2].add_adjacent(cells[3], Cell.Direction.RIGHT)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float):
-	pass
+func set_cell_position(new_cell_position):
+	cell_position = new_cell_position
+	position = Vector2(
+		cell_size * cell_position.x,
+		cell_size * cell_position.y
+	)
+
+func set_cell_position_at_top(cell_position_x):
+	var highest_cell = cells[0]
+	for cell in cells:
+		if cell.cell_position.y < highest_cell.cell_position.y:
+			highest_cell = cell
+	var cell_position_y = -highest_cell.cell_position.y
+	cell_position = Vector2(
+		cell_position_x,
+		cell_position_y
+	)
 
 func rotate90():
-	var rotation_amount = PI / 2
 	if state == State.FALLING:
-		if block_type == "I" && rotation > 0:
-			rotate_about_center(-rotation_amount)
+		if block_type == "I" && rotated_times > 0:
+			rotate90_ccw_about_center()
 		elif block_type != "O":
-			rotate_about_center(rotation_amount)
+			rotate90_cw_about_center()
 
-func rotate_about_center(rotation_amount: float):
-	var center_position = position + Vector2(cell_size / 2.0, cell_size / 2.0).rotated(rotation)
-	rotate(rotation_amount)
-	var new_center_position = position + Vector2(cell_size / 2.0, cell_size / 2.0).rotated(rotation)
-	print_debug(center_position, new_center_position, center_position - new_center_position)
-	translate(center_position - new_center_position)
+func rotate90_cw_about_center():
+	for cell in cells:
+		cell.rotate_about_origin_cw()
+	rotated_times = (rotated_times + 1) % 4
+
+func rotate90_ccw_about_center():
+	for cell in cells:
+		cell.rotate_about_origin_ccw()
+	rotated_times -= 1
+	if rotated_times < 0:
+		rotated_times += 4
