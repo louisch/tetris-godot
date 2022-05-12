@@ -20,12 +20,17 @@ var borders = {
 	Direction.LEFT: Border.THICK,
 	Direction.RIGHT: Border.THICK,
 }
-var cell_position: Vector2 = Vector2.ZERO setget set_cell_position
+var cell_position: Vector2 setget set_cell_position
 
 func initialize(cell_size_: int, bg_color_: Color):
 	cell_size = cell_size_
 	bg_color = bg_color_
+	initialize_borders()
 	update()
+
+func set_cell_position(new_cell_position: Vector2):
+	cell_position = new_cell_position
+	position = cell_position * cell_size
 
 func opposite_direction(direction: int):
 	match direction:
@@ -47,7 +52,7 @@ func direction_to_vec(direction: int):
 			return Vector2.LEFT
 	return Vector2.RIGHT
 
-func separate():
+func initialize_borders():
 	borders = {
 		Direction.UP: Border.THICK,
 		Direction.DOWN: Border.THICK,
@@ -59,17 +64,13 @@ func add_adjacent(adjacent_cell: Cell, direction: int):
 	var opposite_dir = opposite_direction(direction)
 	borders[direction] = Border.THIN
 	adjacent_cell.borders[opposite_dir] = Border.THIN
-	adjacent_cell.set_cell_position(cell_position + direction_to_vec(direction))
-
-func set_cell_position(new_cell_position: Vector2):
-	cell_position = new_cell_position
-	position = cell_position * cell_size
+	adjacent_cell.position = position + cell_size * direction_to_vec(direction)
 
 func _draw():
 	var thick_border_width = int(max(cell_size * BORDER_THICK_FACTOR, 1))
 	var thin_border_width = int(max(cell_size * BORDER_THIN_FACTOR, 1))
-	var origin_x = 0
-	var origin_y = 0
+	var origin_x = -cell_size / 2
+	var origin_y = -cell_size / 2
 	var up_border_width = thin_border_width if borders[Direction.UP] == Border.THIN else thick_border_width
 	var left_border_width = thin_border_width if borders[Direction.LEFT] == Border.THIN else thick_border_width
 	var down_origin_y = origin_y + cell_size - thick_border_width
@@ -93,25 +94,3 @@ func _draw():
 	var bg_width = cell_size - left_border_width - right_border_width
 	var bg_height = cell_size - up_border_width - down_border_width
 	draw_rect(Rect2(bg_origin_x, bg_origin_y, bg_width, bg_height), bg_color)
-
-func rotate_about_origin_cw():
-	set_cell_position(cell_position.rotated(PI / 2).round())
-	var new_borders = {
-		Direction.RIGHT: borders[Direction.UP],
-		Direction.UP: borders[Direction.LEFT],
-		Direction.LEFT: borders[Direction.DOWN],
-		Direction.DOWN: borders[Direction.RIGHT],
-	}
-	borders = new_borders
-	update()
-
-func rotate_about_origin_ccw():
-	set_cell_position(cell_position.rotated(-PI / 2).round())
-	var new_borders = {
-		Direction.LEFT: borders[Direction.UP],
-		Direction.UP: borders[Direction.RIGHT],
-		Direction.RIGHT: borders[Direction.DOWN],
-		Direction.DOWN: borders[Direction.LEFT],
-	}
-	borders = new_borders
-	update()
