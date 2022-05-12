@@ -63,6 +63,10 @@ func _process(_delta: float):
 		rotate_tetromino("CW")
 	elif Input.is_action_just_pressed("rotate_ccw"):
 		rotate_tetromino("CCW")
+	elif Input.is_action_just_pressed("left_shift"):
+		shift_tetromino(-1)
+	elif Input.is_action_just_pressed("right_shift"):
+		shift_tetromino(1)
 	elif Input.is_action_just_pressed("change_tetromino"):
 		active_tetromino.queue_free()
 		spawn_tetromino()
@@ -110,6 +114,9 @@ func restock_next_tetrominoes():
 		var tetromino = tetromino_scene.instance()
 		tetromino.initialize(cell_size, cell_scene)
 		next_tetrominoes.push_back(tetromino)
+
+func shift_tetromino(amount: float):
+	active_tetromino.cell_position += Vector2.RIGHT * amount
 
 func rotate_tetromino(dir: String):
 	var current_rotation = active_tetromino.rotated_times
