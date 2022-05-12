@@ -59,6 +59,13 @@ func initialize_borders():
 		Direction.LEFT: Border.THICK,
 		Direction.RIGHT: Border.THICK,
 	}
+func initialize_borders_thin():
+	borders = {
+		Direction.UP: Border.THIN,
+		Direction.DOWN: Border.THIN,
+		Direction.LEFT: Border.THIN,
+		Direction.RIGHT: Border.THIN,
+	}
 
 func add_adjacent(adjacent_cell: Cell, direction: int):
 	var opposite_dir = opposite_direction(direction)

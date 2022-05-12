@@ -7,7 +7,7 @@ export var field_width: int = 10
 export var field_height: int = 20
 export var fall_speed: float = 1
 export var visible_next_pieces: int = 6
-var active_tetromino: Tetromino
+var active_tetromino: Tetromino = null
 var cell_size: int
 var cell_map: Array = []
 var next_tetrominoes: Array = []
@@ -69,6 +69,7 @@ func _process(_delta: float):
 		shift_tetromino(1)
 	elif Input.is_action_just_pressed("change_tetromino"):
 		active_tetromino.queue_free()
+		active_tetromino = null
 		spawn_tetromino()
 
 # Called once every "tick", which gets faster with game speed
@@ -79,6 +80,7 @@ func _on_tick():
 ### Active Tetromino Functions
 
 func spawn_tetromino():
+	assert(active_tetromino == null, "There should not be an active tetromino when spawning")
 	var next_tetromino = next_tetrominoes.pop_front()
 	active_tetromino = next_tetromino
 	add_child(active_tetromino)
@@ -184,7 +186,20 @@ func tick_tetromino():
 
 	if !has_space_to_fall:
 		# place tetromino
-		pass
+		place_tetromino()
+		spawn_tetromino()
 	else:
-		active_tetromino.set_cell_position(active_tetromino.cell_position + Vector2.DOWN)
+		active_tetromino.cell_position += Vector2.DOWN
 
+func place_tetromino():
+	for cell in active_tetromino.cells:
+		var position = active_tetromino.cell_position + cell.cell_position
+		assert(cell_map[position.y][position.x] == null, "Tetromino should not ever overlap with other cells")
+		cell_map[position.y][position.x] = cell
+		active_tetromino.remove_child(cell)
+		add_child(cell)
+		cell.set_cell_position(position)
+		cell.initialize_borders_thin()
+		cell.update()
+	active_tetromino.queue_free()
+	active_tetromino = null
