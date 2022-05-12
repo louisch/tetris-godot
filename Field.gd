@@ -162,21 +162,24 @@ func tick_tetromino():
 	var has_space_to_fall = true
 
 	for cell in active_tetromino.cells:
-		var position_below = active_tetromino.position + cell.position + Vector2.DOWN
+		var position_below = active_tetromino.cell_position + cell.cell_position + Vector2.DOWN
 		var has_sibling_cell_below = false
 		for other_cell in active_tetromino.cells:
 			if position_below == other_cell.position:
 				has_sibling_cell_below = true
+				break
 		if has_sibling_cell_below:
 			continue
 		
-		if position_below.y > field_height:
+		if position_below.y > field_height || cell_map[position_below.y][position_below.x] != null:
 			has_space_to_fall = false
 			break
 
 	if !has_space_to_fall:
 		# place tetromino
 		pass
+	else:
+		active_tetromino.set_cell_position(active_tetromino.cell_position + Vector2.DOWN)
 
 func furthest_cell_in_direction(direction: int):
 	var furthest_cell = active_tetromino.cells[0]
