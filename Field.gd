@@ -127,10 +127,10 @@ func rotate_tetromino(dir: String):
 		for kick in available_kicks:
 			var kick_vec = Vector2(kick[0], kick[1])
 			var current_cell_position = active_tetromino.cell_position
-			active_tetromino.set_cell_position(current_cell_position + kick_vec)
+			active_tetromino.cell_position += kick_vec
 			if !check_collision():
 				return
-			active_tetromino.set_cell_position(current_cell_position)
+			active_tetromino.cell_position = current_cell_position
 
 	# Undo rotation if basic rotation and all wall kicks collide
 	active_tetromino.rotate90(opposite_dir)
@@ -181,38 +181,3 @@ func tick_tetromino():
 	else:
 		active_tetromino.set_cell_position(active_tetromino.cell_position + Vector2.DOWN)
 
-func furthest_cell_in_direction(direction: int):
-	var furthest_cell = active_tetromino.cells[0]
-	for cell in active_tetromino.cells:
-		match direction:
-			Cell.Direction.UP:
-				if cell.position.y < furthest_cell.position.y:
-					furthest_cell = cell
-			Cell.Direction.DOWN:
-				if cell.position.y > furthest_cell.position.y:
-					furthest_cell = cell
-			Cell.Direction.LEFT:
-				if cell.position.x < furthest_cell.position.x:
-					furthest_cell = cell
-			Cell.Direction.RIGHT:
-				if cell.position.x > furthest_cell.position.x:
-					furthest_cell = cell
-	return furthest_cell
-
-func move_in_bounds():
-	for direction in [Cell.Direction.UP, Cell.Direction.DOWN, Cell.Direction.LEFT, Cell.Direction.RIGHT]:
-		var furthest_cell = furthest_cell_in_direction(direction)
-		var effective_position = furthest_cell.position + active_tetromino.position
-		match direction:
-			Cell.Direction.UP:
-				if effective_position.y < 0:
-					active_tetromino.translate_cell_position_y(-effective_position.y)
-			Cell.Direction.DOWN:
-				if effective_position.y > field_height:
-					active_tetromino.translate_cell_position_y(field_height - effective_position.y)
-			Cell.Direction.LEFT:
-				if effective_position.x < 0:
-					active_tetromino.translate_cell_position_x(-effective_position.x)
-			Cell.Direction.RIGHT:
-				if effective_position.x > field_width:
-					active_tetromino.translate_cell_position_x(field_width - effective_position.x)
