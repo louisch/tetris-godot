@@ -5,12 +5,15 @@ export(PackedScene) var tetromino_scene: PackedScene
 export(PackedScene) var cell_scene: PackedScene
 export var field_width: int = 10
 export var field_height: int = 20
-export var fall_speed: float = 1
+export var normal_gravity: float = 1
+export var soft_drop_gravity: float = 4
 export var visible_next_pieces: int = 6
 var active_tetromino: Tetromino = null
 var cell_size: int
 var cell_map: Array = []
 var next_tetrominoes: Array = []
+var time_since_last_fall: float = 0
+var current_gravity: float = normal_gravity
 
 const I_WALL_KICK_DATA = [
 	{
@@ -58,7 +61,7 @@ func initialize(new_cell_size: int):
 	restock_next_tetrominoes()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float):
+func _process(delta: float):
 	if Input.is_action_just_pressed("rotate_cw"):
 		rotate_tetromino("CW")
 	elif Input.is_action_just_pressed("rotate_ccw"):
@@ -71,10 +74,16 @@ func _process(_delta: float):
 		active_tetromino.queue_free()
 		active_tetromino = null
 		spawn_tetromino()
+	if Input.is_action_just_pressed("soft_drop"):
+		current_gravity = soft_drop_gravity
+	elif Input.is_action_just_released("soft_drop"):
+		current_gravity = normal_gravity
 
-# Called once every "tick", which gets faster with game speed
-func _on_tick():
-	tick_tetromino()
+	time_since_last_fall += delta
+	var wait_time = 1 / current_gravity
+	if time_since_last_fall > wait_time:
+		tetromino_fall()
+		time_since_last_fall = 0
 
 
 ### Active Tetromino Functions
@@ -118,7 +127,10 @@ func restock_next_tetrominoes():
 		next_tetrominoes.push_back(tetromino)
 
 func shift_tetromino(amount: float):
+	var current_position = active_tetromino.cell_position
 	active_tetromino.cell_position += Vector2.RIGHT * amount
+	if check_collision():
+		active_tetromino.cell_position = current_position
 
 func rotate_tetromino(dir: String):
 	var current_rotation = active_tetromino.rotated_times
@@ -167,7 +179,7 @@ func get_wall_kicks():
 		return I_WALL_KICK_DATA
 	return JLTSZ_WALL_KICK_DATA
 
-func tick_tetromino():
+func tetromino_fall():
 	var has_space_to_fall = true
 
 	for cell in active_tetromino.cells:
@@ -199,7 +211,7 @@ func place_tetromino():
 		active_tetromino.remove_child(cell)
 		add_child(cell)
 		cell.set_cell_position(position)
-		cell.initialize_borders_thin()
+		cell.initialize_borders_medium()
 		cell.update()
 	active_tetromino.queue_free()
 	active_tetromino = null

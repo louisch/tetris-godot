@@ -4,13 +4,15 @@ class_name Cell
 
 enum Border {
 	THIN,
-	THICK
+	THICK,
+	MEDIUM
 }
 enum Direction {
 	UP, DOWN, LEFT, RIGHT
 }
 const BORDER_THICK_FACTOR: float = 0.1
 const BORDER_THIN_FACTOR: float = 0.025
+const BORDER_MEDIUM_FACTOR: float = 0.05
 
 var cell_size: int = 50
 var bg_color: Color = Color.white
@@ -59,12 +61,12 @@ func initialize_borders():
 		Direction.LEFT: Border.THICK,
 		Direction.RIGHT: Border.THICK,
 	}
-func initialize_borders_thin():
+func initialize_borders_medium():
 	borders = {
-		Direction.UP: Border.THIN,
-		Direction.DOWN: Border.THIN,
-		Direction.LEFT: Border.THIN,
-		Direction.RIGHT: Border.THIN,
+		Direction.UP: Border.MEDIUM,
+		Direction.DOWN: Border.MEDIUM,
+		Direction.LEFT: Border.MEDIUM,
+		Direction.RIGHT: Border.MEDIUM,
 	}
 
 func add_adjacent(adjacent_cell: Cell, direction: int):
@@ -74,22 +76,14 @@ func add_adjacent(adjacent_cell: Cell, direction: int):
 	adjacent_cell.position = position + cell_size * direction_to_vec(direction)
 
 func _draw():
-	var thick_border_width = int(max(cell_size * BORDER_THICK_FACTOR, 1))
-	var thin_border_width = int(max(cell_size * BORDER_THIN_FACTOR, 1))
 	var origin_x = -cell_size / 2
 	var origin_y = -cell_size / 2
-	var up_border_width = thin_border_width if borders[Direction.UP] == Border.THIN else thick_border_width
-	var left_border_width = thin_border_width if borders[Direction.LEFT] == Border.THIN else thick_border_width
-	var down_origin_y = origin_y + cell_size - thick_border_width
-	var down_border_width = thick_border_width
-	if borders[Direction.DOWN] == Border.THIN:
-		down_origin_y = origin_y + cell_size - thin_border_width
-		down_border_width = thin_border_width
-	var right_origin_x = origin_x + cell_size - thick_border_width
-	var right_border_width = thick_border_width
-	if borders[Direction.RIGHT] == Border.THIN:
-		right_origin_x = origin_x + cell_size - thin_border_width
-		right_border_width = thin_border_width
+	var up_border_width = border_to_width(borders[Direction.UP])
+	var down_border_width = border_to_width(borders[Direction.DOWN])
+	var left_border_width = border_to_width(borders[Direction.LEFT])
+	var right_border_width = border_to_width(borders[Direction.RIGHT])
+	var down_origin_y = origin_y + cell_size - down_border_width
+	var right_origin_x = origin_x + cell_size - right_border_width
 
 	draw_rect(Rect2(origin_x, origin_y, cell_size, up_border_width), Color.black)
 	draw_rect(Rect2(origin_x, origin_y, left_border_width, cell_size), Color.black)
@@ -101,3 +95,13 @@ func _draw():
 	var bg_width = cell_size - left_border_width - right_border_width
 	var bg_height = cell_size - up_border_width - down_border_width
 	draw_rect(Rect2(bg_origin_x, bg_origin_y, bg_width, bg_height), bg_color)
+
+func border_to_width(border: int):
+	match border:
+		Border.THIN:
+			return int(max(cell_size * BORDER_THIN_FACTOR, 1))
+		Border.THICK:
+			return int(max(cell_size * BORDER_THICK_FACTOR, 1))
+		Border.MEDIUM:
+			return int(max(cell_size * BORDER_MEDIUM_FACTOR, 1))
+	return null
