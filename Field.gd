@@ -172,8 +172,8 @@ func check_collision_cell(tetromino: Tetromino, cell: Cell):
 	var effective_cell_position = tetromino.cell_position + cell.cell_position
 	var effective_position = effective_cell_position
 	var cell_rect = Rect2(effective_position - Vector2(0.5, 0.5), Vector2(1, 1))
-	if (cell_rect.position.x < 0 || cell_rect.end.x >= field_width ||
-		cell_rect.position.y < 0 || cell_rect.end.y >= field_height):
+	if (cell_rect.position.x < 0 || cell_rect.end.x > field_width ||
+		cell_rect.position.y < 0 || cell_rect.end.y > field_height):
 		return true
 	var existing_cell = cell_map[floor(effective_cell_position.y)][floor(effective_cell_position.x)]
 	return existing_cell != null
