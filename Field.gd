@@ -9,6 +9,7 @@ export var normal_gravity: float = 1
 export var soft_drop_gravity: float = 4
 export var visible_next_pieces: int = 6
 var active_tetromino: Tetromino = null
+var ghost_tetromino: Tetromino = null
 var cell_size: int
 var cell_map: Array = []
 var next_tetrominoes: Array = []
@@ -71,8 +72,7 @@ func _process(delta: float):
 	elif Input.is_action_just_pressed("right_shift"):
 		shift_tetromino(1)
 	elif Input.is_action_just_pressed("change_tetromino"):
-		active_tetromino.queue_free()
-		active_tetromino = null
+		destroy_tetromino()
 		spawn_tetromino()
 	if Input.is_action_just_pressed("soft_drop"):
 		current_gravity = soft_drop_gravity
@@ -117,20 +117,32 @@ func spawn_tetromino():
 
 	if next_tetrominoes.size() < visible_next_pieces:
 		restock_next_tetrominoes()
+	
+	ghost_tetromino = tetromino_scene.instance()
+	ghost_tetromino.initialize(cell_size, cell_scene, active_tetromino.block_type, true)
+	add_child(ghost_tetromino)
+	position_ghost_tetromino()
 
 func restock_next_tetrominoes():
-	var tetrominoes = Tetromino.ALL_TETROMINOES.duplicate()
-	tetrominoes.shuffle()
-	for tetromino_type in tetrominoes:
+	var tetrominoes_as_types = Tetromino.ALL_TETROMINOES.duplicate()
+	tetrominoes_as_types.shuffle()
+	for tetromino_type in tetrominoes_as_types:
 		var tetromino = tetromino_scene.instance()
-		tetromino.initialize(cell_size, cell_scene)
+		tetromino.initialize(cell_size, cell_scene, tetromino_type)
 		next_tetrominoes.push_back(tetromino)
+
+func position_ghost_tetromino():
+	ghost_tetromino.cell_position = active_tetromino.cell_position
+	while !check_collision(ghost_tetromino):
+		ghost_tetromino.cell_position += Vector2.DOWN
+	ghost_tetromino.cell_position += Vector2.UP
 
 func shift_tetromino(amount: float):
 	var current_position = active_tetromino.cell_position
 	active_tetromino.cell_position += Vector2.RIGHT * amount
-	if check_collision():
+	if check_collision(active_tetromino):
 		active_tetromino.cell_position = current_position
+	position_ghost_tetromino()
 
 func rotate_tetromino(dir: String):
 	var current_rotation = active_tetromino.rotated_times
@@ -138,7 +150,9 @@ func rotate_tetromino(dir: String):
 
 	# Rotate and check if basic rotation has no collision
 	active_tetromino.rotate90(dir)
-	if !check_collision():
+	ghost_tetromino.rotate90(dir)
+	position_ghost_tetromino()
+	if !check_collision(active_tetromino):
 		return
 
 	# Check if wall kick is available and there is no collision with a wall kick
@@ -149,21 +163,23 @@ func rotate_tetromino(dir: String):
 			var kick_vec = Vector2(kick[0], kick[1])
 			var current_cell_position = active_tetromino.cell_position
 			active_tetromino.cell_position += kick_vec
-			if !check_collision():
+			if !check_collision(active_tetromino):
 				return
 			active_tetromino.cell_position = current_cell_position
 
 	# Undo rotation if basic rotation and all wall kicks collide
 	active_tetromino.rotate90(opposite_dir)
+	ghost_tetromino.rotate90(opposite_dir)
+	position_ghost_tetromino()
 
-func check_collision():
-	for cell in active_tetromino.cells:
-		if check_collision_cell(cell):
+func check_collision(tetromino: Tetromino):
+	for cell in tetromino.cells:
+		if check_collision_cell(tetromino, cell):
 			return true
 	return false
 
-func check_collision_cell(cell: Cell):
-	var effective_cell_position = active_tetromino.cell_position + cell.cell_position
+func check_collision_cell(tetromino: Tetromino, cell: Cell):
+	var effective_cell_position = tetromino.cell_position + cell.cell_position
 	var effective_position = effective_cell_position
 	var cell_rect = Rect2(effective_position - Vector2(0.5, 0.5), Vector2(1, 1))
 	if (cell_rect.position.x < 0 || cell_rect.end.x >= field_width ||
@@ -203,6 +219,8 @@ func tetromino_fall():
 	else:
 		active_tetromino.cell_position += Vector2.DOWN
 
+	position_ghost_tetromino()
+
 func place_tetromino():
 	for cell in active_tetromino.cells:
 		var position = active_tetromino.cell_position + cell.cell_position
@@ -213,5 +231,10 @@ func place_tetromino():
 		cell.set_cell_position(position)
 		cell.initialize_borders_medium()
 		cell.update()
+	destroy_tetromino()
+
+func destroy_tetromino():
 	active_tetromino.queue_free()
 	active_tetromino = null
+	ghost_tetromino.queue_free()
+	ghost_tetromino = null

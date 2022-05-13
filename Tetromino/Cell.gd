@@ -10,12 +10,13 @@ enum Border {
 enum Direction {
 	UP, DOWN, LEFT, RIGHT
 }
-const BORDER_THICK_FACTOR: float = 0.1
-const BORDER_THIN_FACTOR: float = 0.025
-const BORDER_MEDIUM_FACTOR: float = 0.05
+var BORDER_THICK_FACTOR: float = 0.1
+var BORDER_THIN_FACTOR: float = 0.025
+var BORDER_MEDIUM_FACTOR: float = 0.05
 
 var cell_size: int = 50
 var bg_color: Color = Color.white
+var border_color: Color = Color.black
 var borders = {
 	Direction.UP: Border.THICK,
 	Direction.DOWN: Border.THICK,
@@ -24,9 +25,11 @@ var borders = {
 }
 var cell_position: Vector2 setget set_cell_position
 
-func initialize(cell_size_: int, bg_color_: Color):
+func initialize(cell_size_: int, bg_color_: Color, border_color_: Color = Color.black, border_thin_factor: float = 0.025):
 	cell_size = cell_size_
 	bg_color = bg_color_
+	border_color = border_color_
+	BORDER_THIN_FACTOR = border_thin_factor
 	initialize_borders()
 	update()
 
@@ -85,10 +88,10 @@ func _draw():
 	var down_origin_y = origin_y + cell_size - down_border_width
 	var right_origin_x = origin_x + cell_size - right_border_width
 
-	draw_rect(Rect2(origin_x, origin_y, cell_size, up_border_width), Color.black)
-	draw_rect(Rect2(origin_x, origin_y, left_border_width, cell_size), Color.black)
-	draw_rect(Rect2(origin_x, down_origin_y, cell_size, down_border_width), Color.black)
-	draw_rect(Rect2(right_origin_x, origin_y, right_border_width, cell_size), Color.black)
+	draw_rect(Rect2(origin_x, origin_y, cell_size, up_border_width), border_color)
+	draw_rect(Rect2(origin_x, origin_y, left_border_width, cell_size), border_color)
+	draw_rect(Rect2(origin_x, down_origin_y, cell_size, down_border_width), border_color)
+	draw_rect(Rect2(right_origin_x, origin_y, right_border_width, cell_size), border_color)
 
 	var bg_origin_x = origin_x + left_border_width
 	var bg_origin_y = origin_y + up_border_width

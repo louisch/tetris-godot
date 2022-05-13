@@ -32,16 +32,13 @@ var cell_position: Vector2 setget set_cell_position
 var rotated_times: int = ROTATION.NONE setget set_rotation_as
 var center_of_rotation: Vector2
 
-func initialize(cell_size_: int, cell_scene_: PackedScene):
+func initialize(cell_size_: int, cell_scene_: PackedScene, block_type_: String, is_ghost: bool = false):
 	cell_scene = cell_scene_
 	cell_size = cell_size_
-
-	# Set block type randomly
-	var new_block_type = ALL_TETROMINOES[int(randf() * ALL_TETROMINOES.size())]
-	initiate_block_type(new_block_type)
+	initiate_block_type(block_type_, is_ghost)
 	set_rotation_as(ROTATION.NONE)
 
-func initiate_block_type(new_block_type: String):
+func initiate_block_type(new_block_type: String, is_ghost: bool):
 	block_type = new_block_type
 	
 	# Initialize cells
@@ -51,7 +48,10 @@ func initiate_block_type(new_block_type: String):
 	for _i in range(4):
 		var new_cell: Cell = cell_scene.instance()
 		add_child(new_cell)
-		new_cell.initialize(cell_size, COLORS[block_type])
+		if !is_ghost:
+			new_cell.initialize(cell_size, COLORS[block_type])
+		else:
+			new_cell.initialize(cell_size, Color.transparent, Color.white, 0)
 		cells.push_back(new_cell)
 
 func set_rotation_as(rotation: int):
