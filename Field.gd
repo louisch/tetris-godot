@@ -71,6 +71,8 @@ func _process(delta: float):
 		shift_tetromino(-1)
 	elif Input.is_action_just_pressed("right_shift"):
 		shift_tetromino(1)
+	elif Input.is_action_just_pressed("hard_drop"):
+		position_tetromino_at_bottom(active_tetromino)
 	elif Input.is_action_just_pressed("change_tetromino"):
 		destroy_tetromino()
 		spawn_tetromino()
@@ -123,9 +125,12 @@ func restock_next_tetrominoes():
 
 func position_ghost_tetromino():
 	ghost_tetromino.cell_position = active_tetromino.cell_position
-	while !check_collision(ghost_tetromino):
-		ghost_tetromino.cell_position += Vector2.DOWN
-	ghost_tetromino.cell_position += Vector2.UP
+	position_tetromino_at_bottom(ghost_tetromino)
+
+func position_tetromino_at_bottom(tetromino: Tetromino):
+	while !check_collision(tetromino):
+		tetromino.cell_position += Vector2.DOWN
+	tetromino.cell_position += Vector2.UP
 
 func shift_tetromino(amount: float):
 	var current_position = active_tetromino.cell_position
