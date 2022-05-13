@@ -73,6 +73,7 @@ func _process(delta: float):
 		shift_tetromino(1)
 	elif Input.is_action_just_pressed("hard_drop"):
 		position_tetromino_at_bottom(active_tetromino)
+		time_since_last_fall = 0
 	elif Input.is_action_just_pressed("change_tetromino"):
 		destroy_tetromino()
 		spawn_tetromino()
@@ -145,27 +146,34 @@ func rotate_tetromino(dir: String):
 
 	# Rotate and check if basic rotation has no collision
 	active_tetromino.rotate90(dir)
-	ghost_tetromino.rotate90(dir)
-	position_ghost_tetromino()
-	if !check_collision(active_tetromino):
-		return
+	var rotation_is_valid = !check_collision(active_tetromino)
 
-	# Check if wall kick is available and there is no collision with a wall kick
-	var kick_data = get_wall_kicks()
-	if kick_data != null:
-		var available_kicks = kick_data[current_rotation][dir]
-		for kick in available_kicks:
-			var kick_vec = Vector2(kick[0], kick[1])
-			var current_cell_position = active_tetromino.cell_position
-			active_tetromino.cell_position += kick_vec
-			if !check_collision(active_tetromino):
-				return
-			active_tetromino.cell_position = current_cell_position
+	if !rotation_is_valid:
+		# Check if wall kick is available and there is no collision with a wall kick
+		var kick_data = get_wall_kicks()
+		if kick_data != null:
+			var available_kicks = kick_data[current_rotation][dir]
+			for kick in available_kicks:
+				var kick_vec = Vector2(kick[0], kick[1])
+				var current_cell_position = active_tetromino.cell_position
+				active_tetromino.cell_position += kick_vec
+				if !check_collision(active_tetromino):
+					rotation_is_valid = true
+					break
+				active_tetromino.cell_position = current_cell_position
 
-	# Undo rotation if basic rotation and all wall kicks collide
-	active_tetromino.rotate90(opposite_dir)
-	ghost_tetromino.rotate90(opposite_dir)
-	position_ghost_tetromino()
+	if rotation_is_valid:
+		ghost_tetromino.rotate90(dir)
+		position_ghost_tetromino()
+		# TODO: Poor man's lock delay, implement this correctly later
+		var current_position = active_tetromino.cell_position
+		active_tetromino.cell_position += Vector2.DOWN
+		if check_collision(active_tetromino):
+			time_since_last_fall = 0
+		active_tetromino.cell_position = current_position
+	else:
+		# Undo rotation if basic rotation and all wall kicks collide
+		active_tetromino.rotate90(opposite_dir)
 
 func check_collision(tetromino: Tetromino):
 	for cell in tetromino.cells:
