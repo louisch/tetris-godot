@@ -94,26 +94,16 @@ func spawn_tetromino():
 	active_tetromino = next_tetromino
 	add_child(active_tetromino)
 	var tetromino_distance_to_left = 1.5
+	var tetromino_distance_to_top = 1.0 if active_tetromino.block_type == "I" || active_tetromino.block_type == "O" else 1.5
 	if active_tetromino.block_type == "I":
 		tetromino_distance_to_left = 2
 	elif active_tetromino.block_type == "O":
 		tetromino_distance_to_left = 1
 	var tetromino_distance_to_right = tetromino_distance_to_left
-	var cell_position = Vector2(
+	active_tetromino.cell_position = Vector2(
 		tetromino_distance_to_left + int(randf() * (field_width - tetromino_distance_to_left - tetromino_distance_to_right)),
-		0
+		tetromino_distance_to_top
 	)
-	if active_tetromino.block_type == "I" || active_tetromino.block_type == "O":
-		cell_position = Vector2(
-			cell_position.x,
-			1
-		)
-	else:
-		cell_position = Vector2(
-			cell_position.x + 0.5,
-			1.5
-		)
-	active_tetromino.set_cell_position(cell_position)
 
 	if next_tetrominoes.size() < visible_next_pieces:
 		restock_next_tetrominoes()
