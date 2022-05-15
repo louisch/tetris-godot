@@ -234,6 +234,30 @@ func place_tetromino():
 		cell.set_cell_position(position)
 		cell.initialize_borders_medium()
 		cell.update()
+	
+	# Check for filled lines
+	for j in range(field_height):
+		var row = cell_map[j]
+		# Check if all cells in cell_map[j] are non-null/filled
+		var all_filled = true
+		for cell in row:
+			if cell == null:
+				all_filled = false
+				break
+		# Move all lines above j down one if line is filled
+		if all_filled:
+			for cell in row:
+				cell.queue_free()
+			for j_above in range(j - 1, 0, -1):
+				for i in range(field_width):
+					var cell = cell_map[j_above][i]
+					cell_map[j_above + 1][i] = cell
+					if cell != null:
+						cell.cell_position += Vector2.DOWN
+			for top_cell_i in range(field_width):
+				cell_map[0][top_cell_i] = null
+
+	# Destroy active_tetromino and ghost_tetromino
 	destroy_tetromino()
 
 func destroy_tetromino():
