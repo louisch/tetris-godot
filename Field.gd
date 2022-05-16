@@ -194,8 +194,8 @@ func check_collision_cell(tetromino: Tetromino, cell: Cell):
 	var effective_cell_position = tetromino.cell_position + cell.cell_position
 	var effective_position = effective_cell_position
 	var cell_rect = Rect2(effective_position - Vector2(0.5, 0.5), Vector2(1, 1))
-	if (cell_rect.position.x < 0 || cell_rect.end.x > field_width ||
-		cell_rect.position.y < 0 || cell_rect.end.y > field_height):
+	if (cell_rect.position.x < -0.1 || cell_rect.end.x > field_width + 0.1 ||
+		cell_rect.position.y < -0.1 || cell_rect.end.y > field_height + 0.1):
 		return true
 	var existing_cell = cell_map[floor(effective_cell_position.y)][floor(effective_cell_position.x)]
 	return existing_cell != null
@@ -208,29 +208,14 @@ func get_wall_kicks():
 	return JLTSZ_WALL_KICK_DATA
 
 func tetromino_fall():
-	var has_space_to_fall = true
-
-	for cell in active_tetromino.cells:
-		var position_below = active_tetromino.cell_position + cell.cell_position + Vector2.DOWN
-		var has_sibling_cell_below = false
-		for other_cell in active_tetromino.cells:
-			if position_below == other_cell.position:
-				has_sibling_cell_below = true
-				break
-		if has_sibling_cell_below:
-			continue
-		
-		if position_below.y > field_height || cell_map[position_below.y][position_below.x] != null:
-			has_space_to_fall = false
-			break
-
-	if !has_space_to_fall:
+	var current_cell_position = active_tetromino.cell_position
+	active_tetromino.cell_position += Vector2.DOWN
+	if check_collision(active_tetromino):
+		active_tetromino.cell_position = current_cell_position
 		# place tetromino
 		place_tetromino()
 		spawn_tetromino()
-	else:
-		active_tetromino.cell_position += Vector2.DOWN
-
+		return
 	position_ghost_tetromino()
 
 func place_tetromino():
