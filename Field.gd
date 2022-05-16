@@ -10,7 +10,7 @@ export var soft_drop_gravity: float = 4
 export var visible_next_pieces: int = 6
 var active_tetromino: Tetromino = null
 var ghost_tetromino: Tetromino = null
-var cell_size: int
+var cell_size: int = 0
 var cell_map: Array = []
 var next_tetrominoes: Array = []
 var time_since_last_fall: float = 0
@@ -60,6 +60,7 @@ func initialize(new_cell_size: int):
 		for _i in range(field_width):
 			cell_map[j].push_back(null)
 	restock_next_tetrominoes()
+	update()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float):
@@ -88,6 +89,13 @@ func _process(delta: float):
 		tetromino_fall()
 		time_since_last_fall = 0
 
+func _draw():
+	var border_width = 4
+	var border_color = Color.gray
+	draw_rect(Rect2(-border_width, -border_width, border_width, field_height * cell_size + border_width * 2), border_color)
+	draw_rect(Rect2(0, -border_width, field_width * cell_size + border_width, border_width), border_color)
+	draw_rect(Rect2(0, field_height * cell_size, field_width * cell_size + border_width, border_width), border_color)
+	draw_rect(Rect2(field_width * cell_size, 0, border_width, field_height * cell_size), border_color)
 
 ### Active Tetromino Functions
 
@@ -138,6 +146,7 @@ func shift_tetromino(amount: float):
 	active_tetromino.cell_position += Vector2.RIGHT * amount
 	if check_collision(active_tetromino):
 		active_tetromino.cell_position = current_position
+		return
 	position_ghost_tetromino()
 
 func rotate_tetromino(dir: String):
